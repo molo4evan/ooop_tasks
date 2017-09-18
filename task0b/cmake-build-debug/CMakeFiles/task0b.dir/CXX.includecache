@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/User/CLionProjects/task0b/main.cpp
+fstream
+-
+sort_strings.h
+C:/Users/User/CLionProjects/task0b/sort_strings.h
+
+C:/Users/User/CLionProjects/task0b/sort_strings.cpp
+sort_strings.h
+C:/Users/User/CLionProjects/task0b/sort_strings.h
+
+C:/Users/User/CLionProjects/task0b/sort_strings.h
+list
+-
+string
+-
+
