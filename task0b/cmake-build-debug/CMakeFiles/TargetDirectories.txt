@@ -1,3 +1,0 @@
-C:/Users/User/CLionProjects/ooop_tasks/task0b/cmake-build-debug/CMakeFiles/task0b.dir
-C:/Users/User/CLionProjects/ooop_tasks/task0b/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/User/CLionProjects/ooop_tasks/task0b/cmake-build-debug/CMakeFiles/rebuild_cache.dir
