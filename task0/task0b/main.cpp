@@ -10,7 +10,7 @@ int main(int argc, char* argv[]){
         cout << "not enough arguments" << endl;
         return 0;
     }
-    
+
     ifstream in(argv[1]);
     ofstream out("out.txt");
     list<string> list_to_sort;
