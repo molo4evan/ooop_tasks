@@ -23,16 +23,16 @@ void Trit_pointer::reallocate() {
     uint new_set_size;
     needed_set_size > double_start_set_size ? (new_set_size = needed_set_size) : (new_set_size = double_start_set_size);
 
-    vector<uint> *old_vector = this->set->getSet();
-    old_vector->resize(new_set_size, 0);
-
+    uint* old_vector = this->set->getSet();
+    old_vector = resize(old_vector, set_size, new_set_size);
+    set->setSet(old_vector);
     set->setCapacity(new_set_size);
 }
 
 uint* Trit_pointer::getAccuratePos(uint* trit_pos){
     auto cell = static_cast<uint>(full_pos * TRIT_SIZE / BYTE_SIZE / sizeof(uint));
     *trit_pos = full_pos % ((BYTE_SIZE / TRIT_SIZE) * sizeof(uint));
-    uint* int_pos = set->getSet()->data() + cell * sizeof(uint);
+    uint* int_pos = &(set->getSet()[cell]);
     return int_pos;
 }
 
@@ -52,7 +52,7 @@ Trit Trit_pointer::operator =(Trit trit) {
     uint* int_pos = nullptr;
     int_pos = this->getAccuratePos(&trit_pos);
 
-    uint shift = BYTE_SIZE * sizeof(uint) - TRIT_SIZE * (trit_pos - 1);
+    uint shift = BYTE_SIZE * sizeof(uint) - TRIT_SIZE * (trit_pos + 1);
     auto void_mask = static_cast<uint>(~(0b11 << shift));
 
     *int_pos &= void_mask;

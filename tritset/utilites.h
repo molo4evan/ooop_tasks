@@ -13,4 +13,6 @@ const uint TRIT_SIZE = 2;
 const uint BYTE_SIZE = 8;
 
 void print_trit(Trit);
+void assign(uint*, uint);
+uint* resize(uint*, uint, uint);
 #endif //TRITSET_UTILITES_H
