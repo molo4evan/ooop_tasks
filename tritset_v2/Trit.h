@@ -13,9 +13,21 @@ private:
 public:
     Trit();
     Trit(Trit_num);
-    Trit_num getTrit();
-    bool operator==(Trit_num);
-    bool operator!=(Trit_num);
+    Trit(const Trit&);
+    operator Trit_num()const;
+    operator unsigned int()const;
+    Trit& operator=(Trit_num);
+    Trit& operator=(const Trit&);
+    bool operator==(Trit_num)const;
+    bool operator==(const Trit&)const;
+    bool operator!=(Trit_num)const;
+    bool operator!=(const Trit&)const;
+    Trit_num operator&(Trit_num)const;
+    Trit_num operator&(const Trit&)const;
+    Trit_num operator|(Trit_num)const;
+    Trit_num operator|(const Trit&)const;
+    Trit_num operator~()const;
+
 };
 
 

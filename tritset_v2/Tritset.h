@@ -8,8 +8,85 @@
 #include "utilites.h"
 #include "Trit.h"
 #include <iostream>
+#include <unordered_map>
 
 class Tritset {
+public:
+    class Reference {
+    private:
+        size_t array_pos;
+        uint int_pos;
+        Tritset* tritset;
+
+        void reallocate();
+        friend Trit_num operator&(const Trit_num&, const Tritset::Reference&);
+        friend Trit_num operator|(const Trit_num&, const Tritset::Reference&);
+        friend bool operator==(const Trit_num&, Tritset::Reference);
+        friend bool operator!=(const Trit_num&, Tritset::Reference);
+        friend std::ostream& operator<<(std::ostream& os, const Tritset::Reference& trit_ref);
+    public:
+        Reference(uint, uint, Tritset*);
+        Reference(uint, uint, const Tritset*);
+        Trit_num operator=(const Trit_num&);
+        Trit_num operator=(const Reference&);
+        Trit_num operator~()const;
+        Trit_num operator&(Reference)const;
+        Trit_num operator&(const Trit_num&)const;
+        Trit_num operator|(Reference)const;
+        Trit_num operator|(const Trit_num&)const;
+        bool operator==(Reference)const;
+        bool operator==(const Trit_num&)const;
+        bool operator!=(Reference)const;
+        bool operator!=(const Trit_num&)const;
+        Tritset* getTritset() const;
+        uint getIntPos() const;
+        size_t getArrayPos() const;
+        void setIntPos(const uint);
+        void setArrayPos(const size_t);
+    };
+
+    Tritset();
+    explicit Tritset(uint);
+    Tritset(const Tritset&);
+    ~Tritset();
+    uint capacity()const;
+    void shrink();
+    uint cardinality(Trit_num)const;
+    std::unordered_map<uint, uint> cardinality()const;
+    void trim(uint);
+    uint length()const;
+    void printSet()const;
+
+    const Reference operator[](uint)const;
+    Reference operator[](uint);
+    Tritset& operator=(const Tritset&);
+    Tritset operator&(const Tritset&)const;
+    Tritset operator|(const Tritset&)const;
+    Tritset operator~()const;
+    bool operator==(const Tritset&)const;
+    bool operator!=(const Tritset&)const;
+
+    class InputIterator: public std::iterator<std::input_iterator_tag, Reference> {
+        friend class Tritset;
+    private:
+        Reference ref;
+
+         explicit InputIterator(Tritset::Reference);
+    public:
+        InputIterator(const InputIterator&);
+
+        bool operator!=(InputIterator const&) const;
+        bool operator==(InputIterator const&) const;
+        Trit_num operator*() const;
+        InputIterator&operator++();
+        friend std::ostream& operator<<(std::ostream&, const InputIterator);
+    };
+
+    typedef InputIterator iterator;
+
+    iterator begin();
+    iterator end();
+
 private:
     uint* set;
     uint set_size;
@@ -18,48 +95,14 @@ private:
     uint last_trit;
 
     void resize(uint);
-    Trit_num getTrit(uint);
+    Trit_num getTrit(uint)const;
+    friend std::ostream& operator<<(std::ostream& os, const Tritset& tritset);
 
-public:
-    class Reference {
-    private:
-        uint array_pos;
-        uint int_pos;
-        Tritset* tritset;
-
-        void reallocate();
-    public:
-        Reference();
-        Reference(uint, uint, Tritset*);
-        Trit_num operator=(Trit_num);
-        Trit_num operator~();
-        Trit_num operator&(Reference);
-        Trit_num operator&(Trit_num);
-        Trit_num operator|(Reference);
-        Trit_num operator|(Trit_num);
-        bool operator==(Reference);
-        bool operator==(Trit_num);
-        bool operator!=(Reference);
-        bool operator!=(Trit_num);
-        friend std::ostream& operator<<(std::ostream& os, const Tritset::Reference& trit_ref);
-
-    };
-
-    Tritset();
-    explicit Tritset(uint);
-    ~Tritset();
-    uint capacity();
-    void shrink();
-    Reference operator[](uint);
-    void printSet();
+    friend Trit_num operator&(const Trit_num&, const Tritset::Reference&);
+    friend Trit_num operator|(const Trit_num&, const Tritset::Reference&);
+    friend bool operator==(const Trit_num&, Tritset::Reference);
+    friend bool operator!=(const Trit_num&, Tritset::Reference);
     friend std::ostream& operator<<(std::ostream& os, const Tritset::Reference& trit_ref);
-    friend std::ostream& operator<<(std::ostream& os, Tritset& tritset);
-    Tritset& operator=(Tritset);
-    Tritset operator&(Tritset&);
-    Tritset operator|(Tritset&);
-    Tritset operator~();
-    bool operator==(Tritset&);
-    bool operator!=(Tritset&);
 };
 
 
