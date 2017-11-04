@@ -33,7 +33,7 @@ TEST_F(ClassDeclaration, noAlocation){
 
 TEST_F(ClassDeclaration, FalseNoAlloc){
     ASSERT_EQ(set[2000000000]==True, false);
-    assert(allocLength == set.capacity());
+    ASSERT_EQ(allocLength, set.capacity());
 }
 
 TEST_F(ClassDeclaration, Allocation){
@@ -68,3 +68,71 @@ TEST_F(ClassDeclaration, ops){
     ASSERT_EQ(set4.capacity(), set1.capacity());
 }
 
+TEST_F(ClassDeclaration, trim){
+    set1[1999] = True;
+    allocLength = set1.capacity();
+    set1.trim(50);
+    ASSERT_LT(set1.capacity(), allocLength);
+}
+
+TEST_F(ClassDeclaration, lenth){
+    set[999] = True;
+    ASSERT_EQ(set.length(), 1000);
+}
+
+TEST_F(ClassDeclaration, card_1){
+    set[0] = True;
+    set[1] = True;
+    set[2] = True;
+    set[3] = True;
+    set[4] = True;
+    set[5] = False;
+    set[6] = False;
+    set[7] = False;
+    set[8] = False;
+    set[9] = False;
+    set[10] = False;
+    set[999] = True;
+    ASSERT_EQ(set.cardinality(True), 6);
+    ASSERT_EQ(set.cardinality(False), 6);
+    ASSERT_EQ(set.cardinality(Unknown), set.length() - 12);
+}
+
+TEST_F(ClassDeclaration, card_all){
+    set[0] = True;
+    set[1] = True;
+    set[2] = True;
+    set[3] = True;
+    set[4] = True;
+    set[5] = False;
+    set[6] = False;
+    set[7] = False;
+    set[8] = False;
+    set[9] = False;
+    set[10] = False;
+    set[999] = True;
+    std::unordered_map<uint, uint> map = set.cardinality();
+    ASSERT_EQ(map[True], 6);
+    ASSERT_EQ(map[False], 6);
+    ASSERT_EQ(map[Unknown], set.length() - 12);
+}
+
+TEST_F(ClassDeclaration, iter){
+    set[0] = True;
+    set[1] = True;
+    set[2] = True;
+    set[3] = True;
+    set[4] = True;
+    set[5] = False;
+    set[6] = False;
+    set[7] = False;
+    set[8] = False;
+    set[9] = False;
+    set[10] = False;
+    set[999] = True;
+    int i = 0;
+    for (Tritset::iterator a = set.begin();  a != set.end(); ++a) {
+        ASSERT_EQ(*a, set[i]);
+        ++i;
+    }
+}
