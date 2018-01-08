@@ -4,10 +4,10 @@
 
 #include "Executor.h"
 
-void Executor::exec(std::list<Block*> *flow) {
+void Executor::exec(block_list *flow) {
     for (auto block: (*flow)){
         std::string p = block->params;
         text = block->worker->exec(p, text);
     }
-    //delete[] flow;                //TODO: working version (shared_ptr?)
+    delete flow;                //TODO: working version (shared_ptr?)
 }

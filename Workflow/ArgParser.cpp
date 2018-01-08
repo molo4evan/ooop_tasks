@@ -27,9 +27,9 @@ void WordsParser::parse(std::string &params, std::string &word1, std::string &wo
     }
     word1 = params.substr(0, i);
 
-    if (i >= params.length() - 1) throw "syntax error: wrong command arguments";       //TODO: here can b ur exceptions
+    if (i >= params.length() - 1) throw FlowExcept("wrong command arguments");
 
-    if (params[i] != ' ') throw "syntax error: wrong command arguments";       //TODO: here can b ur exceptions
+    if (params[i] != ' ') throw FlowExcept("wrong command arguments");
     i++;
 
     int m = i;

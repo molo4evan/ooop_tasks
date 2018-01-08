@@ -21,17 +21,17 @@ void Parser::delete_workers() {
     }
 }
 
-std::list<Block*>* Parser::parse(std::ifstream &file) {
+block_list* Parser::parse(std::ifstream &file) {
 
-    std::map<int, Block*>* blocks = get_blocks(file);
+    block_map* blocks = get_blocks(file);
 
     return get_flow(file, blocks);
 }
 
-std::map<int, Block*>* Parser::get_blocks(std::ifstream &file) {
+block_map* Parser::get_blocks(std::ifstream &file) {
     using namespace std;
 
-    map<int, Block*>* out = new map<int, Block*>;
+    block_map* out = new block_map;
     string buf;
     getline(file, buf);
     int i = 0;
@@ -56,11 +56,11 @@ std::map<int, Block*>* Parser::get_blocks(std::ifstream &file) {
 
         for (int j = 0; j < block_buf.length(); ++j) {
             char n = (block_buf.c_str())[i];
-            //if (block_buf[i] < 48 || block_buf[i] > 57) throw FlowExcept("wrong block initialisation");
+            //if (block_buf[i] < '0' || block_buf[i] > '9') throw FlowExcept("wrong block initialisation");
         }
         id = atoi(block_buf.c_str());
 
-        if (i >= (buf.length() - 3) || buf[i + 1] != '=' || buf[i + 2] != ' ') throw FlowExcept("wrong block initialisation");
+        if (i >= (buf.length() - 3) || buf.substr(i, 3) != " = ") throw FlowExcept("wrong block initialisation");
 
         i += 3;
         int m = i;
@@ -82,7 +82,7 @@ std::map<int, Block*>* Parser::get_blocks(std::ifstream &file) {
         }
         block_buf = buf.substr(m, i - m);
 
-        Block* block = new Block;
+        my::shared_ptr<Block> block;
         block->params = block_buf;
         block->worker = worker;
 
@@ -92,10 +92,10 @@ std::map<int, Block*>* Parser::get_blocks(std::ifstream &file) {
     return out;
 }
 
-std::list<Block*>* Parser::get_flow(std::ifstream &file, std::map<int, Block*>* blocks) {
+block_list* Parser::get_flow(std::ifstream &file, block_map* blocks) {
     using namespace std;
 
-    auto out = new list<Block*>;
+    auto out = new block_list;
     string list_buf;
     getline(file, list_buf);
     int i = 0;
@@ -124,10 +124,11 @@ std::list<Block*>* Parser::get_flow(std::ifstream &file, std::map<int, Block*>* 
         auto block = (*blocks)[id];
         (*out).push_back(block);
 
-        if((i < list_buf.length() - 3) && (list_buf[i] != ' ' || list_buf[i + 1] != '-' || list_buf[i + 2] != '>' || list_buf[i + 3] != ' ')) throw FlowExcept("wrong flow initialisation");
+        if((i < list_buf.length() - 3) && list_buf.substr(i, 4) != " -> ") throw FlowExcept("wrong flow initialisation");
 
         i += 4;
     }
 
+    delete blocks;
     return out;
 }

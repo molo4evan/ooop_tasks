@@ -6,12 +6,15 @@
 #define WORKFLOW_EXECUTOR_H
 #include <list>
 #include "Worker.h"
+#include "shared_ptr.h"
+
+typedef std::list<my::shared_ptr<Block>> block_list;
 
 class Executor {
 private:
     std::vector<std::string>* text;
 public:
-    void exec(std::list<Block*>*);
+    void exec(block_list*);
 };
 
 

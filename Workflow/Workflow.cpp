@@ -23,7 +23,7 @@ void Workflow::handle() {
     ifstream config(file);
 
     try {
-        list<Block*>* flow = parser->parse(config);
+        block_list* flow = parser->parse(config);
         executor->exec(flow);
     }
 

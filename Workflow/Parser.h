@@ -7,15 +7,19 @@
 #include <map>
 #include <list>
 #include "Worker.h"
+#include "shared_ptr.h"
+
+typedef std::map<int, my::shared_ptr<Block>> block_map;
+typedef std::list<my::shared_ptr<Block>> block_list;
 
 class Parser {
 private:
-    std::map<int, Block*>* get_blocks(std::ifstream&);
-    std::list<Block*>* get_flow(std::ifstream&, std::map<int, Block*>*);
+    block_map* get_blocks(std::ifstream&);
+    block_list* get_flow(std::ifstream&, block_map*);
 public:
     static void init_workers();
     static void delete_workers();
-    std::list<Block*>* parse(std::ifstream&);
+    block_list* parse(std::ifstream&);
 };
 
 #endif //WORKFLOW_PARSER_H

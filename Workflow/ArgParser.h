@@ -6,6 +6,7 @@
 #define WORKFLOW_ARGPARSER_H
 
 #include <string>
+#include "FlowExcept.h"
 
 class FileParser{
 public:
