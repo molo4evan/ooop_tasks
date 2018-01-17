@@ -9,5 +9,5 @@ void Executor::exec(block_list *flow) {
         std::string p = block->params;
         text = block->worker->exec(p, text);
     }
-    delete flow;                //TODO: working version (shared_ptr?)
+    delete flow;
 }

@@ -34,40 +34,44 @@ block_map* Parser::get_blocks(std::ifstream &file) {
     block_map* out = new block_map;
     string buf;
     getline(file, buf);
-    int i = 0;
-    for (i; i < buf.length(); ++i) {
-        if (buf[i] == ' ' || buf [i] == '#' || buf[i] == '\t') break;
-    }
-    buf.resize(i);
-    i = 0;
-    if (buf != "desc") throw FlowExcept("wrong descriptor list opening");
+    buf.resize(4);
+    if (buf != "desc") throw FlowExcept("wrong descriptor list initialisation");
 
     while(true){
         int id = 0;
         getline(file, buf);
-        if (buf[0] == 'c' && buf[1] == 's' && buf[2] == 'e' && buf[3] == 'd') break;
-
+        if (buf.substr(0, 4) == "csed") break;
         string block_buf;
-        for (i = 0; i < buf.length(); ++i) {
-            if (buf[i] == ' ' || buf[i] == '#') break;
+
+        int i = 0;
+        while(i < buf.length() && (buf[i]== ' ' || buf[i] == '\t')) i++;
+        if (i >= buf.length()) continue;
+
+        int k = i;
+        for (i; i < buf.length(); ++i) {
+            if (buf[i] == ' ' || buf[i] == '#' || buf[i] == '\t') break;
         }
-        block_buf = buf.substr(0, i);
+        if (i - k == 0) continue;
+
+        block_buf = buf.substr(k, i - k);
         if (!block_buf.length()) continue;
 
-        for (int j = 0; j < block_buf.length(); ++j) {
-            char n = (block_buf.c_str())[i];
-            //if (block_buf[i] < '0' || block_buf[i] > '9') throw FlowExcept("wrong block initialisation");
+        for (char j : block_buf) {
+            if (j < '0' || j > '9') throw FlowExcept("wrong block initialisation");
         }
         id = atoi(block_buf.c_str());
 
-        if (i >= (buf.length() - 3) || buf.substr(i, 3) != " = ") throw FlowExcept("wrong block initialisation");
+        while (i < buf.length() && (buf[i] == ' ' || buf[i] == '\t')) i++;
+        if (i >= (buf.length()) || buf[i] != '=') throw FlowExcept("wrong block initialisation");
+        i++;
+        while (i < buf.length() && (buf[i] == ' ' || buf[i] == '\t')) i++;
 
-        i += 3;
         int m = i;
         for (i; i < buf.length(); ++i) {
-            char n = buf[i];
             if (buf[i] == ' ' || buf[i] == '#') break;
         }
+        if (i - m == 0) throw FlowExcept("wrong block initialisation");
+
         block_buf = buf.substr(m, i - m);
 
         auto iter = workers.find(block_buf);
@@ -97,7 +101,11 @@ block_list* Parser::get_flow(std::ifstream &file, block_map* blocks) {
 
     auto out = new block_list;
     string list_buf;
-    getline(file, list_buf);
+    {
+        getline(file, list_buf);
+    } while (list_buf.empty() && !file.eof());
+    if (list_buf.empty()) throw FlowExcept("no flow");
+
     int i = 0;
     for (i; i < list_buf.length(); ++i) {
         if (list_buf[i] == '#') break;
@@ -114,8 +122,8 @@ block_list* Parser::get_flow(std::ifstream &file, block_map* blocks) {
             id_buf[k] = list_buf[m + k];
         }
 
-        for (int j = 0; j < id_buf.length(); ++j) {
-            if (id_buf[j] < '0' || id_buf[j] > '9') throw FlowExcept("wrong flow initialisation");
+        for (char j : id_buf) {
+            if (j < '0' || j > '9') throw FlowExcept("wrong flow initialisation");
         }
         int id = atoi(id_buf.c_str());
 
@@ -124,9 +132,12 @@ block_list* Parser::get_flow(std::ifstream &file, block_map* blocks) {
         auto block = (*blocks)[id];
         (*out).push_back(block);
 
-        if((i < list_buf.length() - 3) && list_buf.substr(i, 4) != " -> ") throw FlowExcept("wrong flow initialisation");
-
-        i += 4;
+        while (i < list_buf.length() && (list_buf[i] == ' ' || list_buf[i] == '\t')) i++;
+        if (i < list_buf.length() && list_buf[i] == '#') break;
+        if (i < list_buf.length() - 1 && list_buf.substr(i, 2) != "->") throw FlowExcept("wrong flow initialisation");
+        i += 2;
+        while (i < list_buf.length() && (list_buf[i] == ' ' || list_buf[i] == '\t')) i++;
+        if (i >= list_buf.length()) break;
     }
 
     delete blocks;

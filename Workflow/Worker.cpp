@@ -43,6 +43,8 @@ std::vector<std::string>* Writefile::exec(std::string& params, std::vector<std::
 }
 
 std::vector<std::string>* Grep::exec(std::string& params, std::vector<std::string>* text) {
+    if (text == nullptr) throw FlowExcept("wrong workers order");
+
     WordParser ap;
     string word = ap.parse(params);
 
@@ -56,6 +58,8 @@ std::vector<std::string>* Grep::exec(std::string& params, std::vector<std::strin
 }
 
 std::vector<std::string>* Sort::exec(std::string&, std::vector<std::string>* text) {
+    if (text == nullptr) throw FlowExcept("wrong workers order");
+
     for (int i = (*text).size() - 1; i > 1; --i) {
         for (int j = 0; j < i; ++j) {
             if ((*text)[j] > (*text)[j + 1]) {
@@ -69,6 +73,8 @@ std::vector<std::string>* Sort::exec(std::string&, std::vector<std::string>* tex
 }
 
 std::vector<std::string>* Replace::exec(std::string& params, std::vector<std::string>* text) {
+    if (text == nullptr) throw FlowExcept("wrong workers order");
+
     WordsParser ap;
     string old_str, new_str;
     ap.parse(params, old_str, new_str);
@@ -84,6 +90,8 @@ std::vector<std::string>* Replace::exec(std::string& params, std::vector<std::st
 }
 
 std::vector<std::string>* Dump::exec(std::string& params, std::vector<std::string>* text) {
+    if (text == nullptr) throw FlowExcept("wrong workers order");
+
     FileParser ap;
     string name = ap.parse(params);
     file.open(name);

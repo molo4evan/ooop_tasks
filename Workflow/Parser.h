@@ -6,6 +6,7 @@
 #define WORKFLOW_PARSER_H
 #include <map>
 #include <list>
+#include <iostream>
 #include "Worker.h"
 #include "shared_ptr.h"
 
