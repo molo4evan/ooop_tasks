@@ -57,7 +57,7 @@ block_map* Parser::get_blocks(std::ifstream &file) {
         if (!block_buf.length()) continue;
 
         for (char j : block_buf) {
-            if (j < '0' || j > '9') throw FlowExcept("wrong block initialisation");
+            if (!isdigit(j)) throw FlowExcept("wrong block initialisation");
         }
         id = atoi(block_buf.c_str());
 
@@ -123,7 +123,7 @@ block_list* Parser::get_flow(std::ifstream &file, block_map* blocks) {
         }
 
         for (char j : id_buf) {
-            if (j < '0' || j > '9') throw FlowExcept("wrong flow initialisation");
+            if (!isdigit(j)) throw FlowExcept("wrong flow initialisation");
         }
         int id = atoi(id_buf.c_str());
 

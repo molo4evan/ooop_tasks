@@ -8,7 +8,6 @@
 #include <fstream>
 #include <vector>
 #include <cstdlib>
-#include <iostream>
 #include "ArgParser.h"
 #include "FlowExcept.h"
 
