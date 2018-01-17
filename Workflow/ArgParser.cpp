@@ -4,18 +4,10 @@
 
 #include "ArgParser.h"
 
-std::string FileParser::parse(std::string &params) {
-    int i = 0;
-    for (i; i < params.length(); ++i) {
-        if (params[i] == ' ') break;
-    }
-    return params.substr(0, i);
-}
-
 std::string WordParser::parse(std::string &params) {
     int i = 0;
     for (i; i < params.length(); ++i) {
-        if (params[i] == ' ') break;
+        if (params[i] == ' ' || params[i] == '\t') break;
     }
     return params.substr(0, i);
 }
@@ -23,18 +15,16 @@ std::string WordParser::parse(std::string &params) {
 void WordsParser::parse(std::string &params, std::string &word1, std::string &word2) {
     int i = 0;
     for (i; i < params.length(); ++i) {
-        if (params[i] == ' ') break;
+        if (params[i] == ' ' || params[i] == '\t') break;
     }
     word1 = params.substr(0, i);
 
-    if (i >= params.length() - 1) throw FlowExcept("wrong command arguments");
-
-    if (params[i] != ' ') throw FlowExcept("wrong command arguments");
-    i++;
+    while(i < params.length() && (params[i] == ' ' || params[i] == '\t')) i++;
+    if (i >= params.length()) throw FlowExcept("wrong command arguments");
 
     int m = i;
     for (i; i < params.length(); ++i) {
-        if (params[i] == ' ') break;
+        if (params[i] == ' ' || params[i] == '\t') break;
     }
-    word2 = params.substr(m, i);
+    word2 = params.substr(m, i - m);
 }

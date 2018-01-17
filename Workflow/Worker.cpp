@@ -12,7 +12,7 @@ Block::Block(Worker *w, std::string &p) {
 }
 
 std::vector<std::string>* Readfile::exec(std::string& params, std::vector<std::string>*) {
-    FileParser ap;
+    WordParser ap;
     string name = ap.parse(params);
     file.open(name);
     if (!file.is_open()) throw FlowExcept("file opening error");
@@ -28,7 +28,7 @@ std::vector<std::string>* Readfile::exec(std::string& params, std::vector<std::s
 }
 
 std::vector<std::string>* Writefile::exec(std::string& params, std::vector<std::string>* text) {
-    FileParser ap;
+    WordParser ap;
     string name = ap.parse(params);
     file.open(name);
     if (!file.is_open()) throw FlowExcept("file opening error");
@@ -92,7 +92,7 @@ std::vector<std::string>* Replace::exec(std::string& params, std::vector<std::st
 std::vector<std::string>* Dump::exec(std::string& params, std::vector<std::string>* text) {
     if (text == nullptr) throw FlowExcept("wrong workers order");
 
-    FileParser ap;
+    WordParser ap;
     string name = ap.parse(params);
     file.open(name);
     if (!file.is_open()) throw FlowExcept("file opening error");

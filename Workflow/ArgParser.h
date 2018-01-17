@@ -8,11 +8,6 @@
 #include <string>
 #include "FlowExcept.h"
 
-class FileParser{
-public:
-    std::string parse(std::string&);
-};
-
 class WordParser{
 public:
     std::string parse(std::string&);
