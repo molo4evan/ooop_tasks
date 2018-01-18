@@ -11,14 +11,15 @@ Block::Block(Worker *w, std::string &p) {
     params = p;
 }
 
-std::vector<std::string>* Readfile::exec(std::string& params, std::vector<std::string>*) {
+std::vector<std::string>* Readfile::exec(std::string& params, std::vector<std::string>* text) {
+    if (!text->empty()) throw FlowExcept("wrong workers order");
+
     WordParser ap;
     string name = ap.parse(params);
     file.open(name);
     if (!file.is_open()) throw FlowExcept("file opening error");
 
     string str;
-    vector<string>* text = new vector<string>;
     while (!file.eof()){
         getline(file, str);
         (*text).push_back(str);
@@ -28,6 +29,8 @@ std::vector<std::string>* Readfile::exec(std::string& params, std::vector<std::s
 }
 
 std::vector<std::string>* Writefile::exec(std::string& params, std::vector<std::string>* text) {
+    if (text->empty()) throw FlowExcept("wrong workers order");
+
     WordParser ap;
     string name = ap.parse(params);
     file.open(name);
@@ -43,7 +46,7 @@ std::vector<std::string>* Writefile::exec(std::string& params, std::vector<std::
 }
 
 std::vector<std::string>* Grep::exec(std::string& params, std::vector<std::string>* text) {
-    if (text == nullptr) throw FlowExcept("wrong workers order");
+    if (text->empty()) throw FlowExcept("wrong workers order");
 
     WordParser ap;
     string word = ap.parse(params);
@@ -58,7 +61,7 @@ std::vector<std::string>* Grep::exec(std::string& params, std::vector<std::strin
 }
 
 std::vector<std::string>* Sort::exec(std::string&, std::vector<std::string>* text) {
-    if (text == nullptr) throw FlowExcept("wrong workers order");
+    if (text->empty()) throw FlowExcept("wrong workers order");
 
     for (int i = (*text).size() - 1; i > 1; --i) {
         for (int j = 0; j < i; ++j) {
@@ -73,7 +76,7 @@ std::vector<std::string>* Sort::exec(std::string&, std::vector<std::string>* tex
 }
 
 std::vector<std::string>* Replace::exec(std::string& params, std::vector<std::string>* text) {
-    if (text == nullptr) throw FlowExcept("wrong workers order");
+    if (text->empty()) throw FlowExcept("wrong workers order");
 
     WordsParser ap;
     string old_str, new_str;
@@ -90,7 +93,7 @@ std::vector<std::string>* Replace::exec(std::string& params, std::vector<std::st
 }
 
 std::vector<std::string>* Dump::exec(std::string& params, std::vector<std::string>* text) {
-    if (text == nullptr) throw FlowExcept("wrong workers order");
+    if (text->empty()) throw FlowExcept("wrong workers order");
 
     WordParser ap;
     string name = ap.parse(params);

@@ -4,6 +4,10 @@
 
 #include "Executor.h"
 
+Executor::Executor(){
+    text = new std::vector<std::string>;
+}
+
 void Executor::exec(block_list *flow) {
     for (auto block: (*flow)){
         std::string p = block->params;

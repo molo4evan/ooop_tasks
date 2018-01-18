@@ -14,6 +14,7 @@ class Executor {
 private:
     std::vector<std::string>* text;
 public:
+    Executor();
     void exec(block_list*);
 };
 

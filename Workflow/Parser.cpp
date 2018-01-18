@@ -45,20 +45,15 @@ block_map* Parser::get_blocks(std::ifstream &file) {
 
         int i = 0;
         while(i < buf.length() && (buf[i]== ' ' || buf[i] == '\t')) i++;
-        if (i >= buf.length()) continue;
+        if (i >= buf.length()|| buf[i] == '#') continue;
 
         int k = i;
-        for (i; i < buf.length(); ++i) {
-            if (buf[i] == ' ' || buf[i] == '#' || buf[i] == '\t') break;
-        }
-        if (i - k == 0) continue;
+        while(i != buf.length() && isdigit(buf[i])) i++;
+        if (i - k == 0) throw FlowExcept("wrong bock initialisation");
 
         block_buf = buf.substr(k, i - k);
         if (!block_buf.length()) continue;
 
-        for (char j : block_buf) {
-            if (!isdigit(j)) throw FlowExcept("wrong block initialisation");
-        }
         id = atoi(block_buf.c_str());
 
         while (i < buf.length() && (buf[i] == ' ' || buf[i] == '\t')) i++;
@@ -101,9 +96,9 @@ block_list* Parser::get_flow(std::ifstream &file, block_map* blocks) {
 
     auto out = new block_list;
     string list_buf;
-    {
+    while (list_buf.empty() && !file.eof()) {
         getline(file, list_buf);
-    } while (list_buf.empty() && !file.eof());
+    }
     if (list_buf.empty()) throw FlowExcept("no flow");
 
     int i = 0;
@@ -111,19 +106,19 @@ block_list* Parser::get_flow(std::ifstream &file, block_map* blocks) {
         if (list_buf[i] == '#') break;
     }
     list_buf.resize(i);
+    if (list_buf.empty()) throw FlowExcept("no flow");
     i = 0;
 
     while(i < list_buf.size()){
         string id_buf;
         int m = i;
-        while(list_buf[i] != ' ' && i != list_buf.length()) i++;
+
+        while (i <= list_buf.length() && isdigit(list_buf[i])) i++;
+        if (i - m == 0) throw FlowExcept("wrong flow initialisation");
+
         id_buf.resize(i - m);
         for (int k = 0; k < i - m; ++k) {
             id_buf[k] = list_buf[m + k];
-        }
-
-        for (char j : id_buf) {
-            if (!isdigit(j)) throw FlowExcept("wrong flow initialisation");
         }
         int id = atoi(id_buf.c_str());
 
